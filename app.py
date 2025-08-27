@@ -393,19 +393,19 @@ if st.session_state.df is not None:
             # Update session state when repayment period changes
             if "last_repayment_months" not in st.session_state:
                 st.session_state.last_repayment_months = repayment_period_months
-                st.session_state.operating_cost_principal_pos_text = f"{float(operating_cost_principal_pos_default):.2f}"
-                st.session_state.operating_cost_principal_neg_text = f"{float(operating_cost_principal_neg_default):.2f}"
+                st.session_state.operating_cost_pos_value = f"{float(operating_cost_principal_pos_default):.2f}"
+                st.session_state.operating_cost_neg_value = f"{float(operating_cost_principal_neg_default):.2f}"
             elif st.session_state.last_repayment_months != repayment_period_months:
                 # Repayment period has changed, update the default values
                 st.session_state.last_repayment_months = repayment_period_months
-                st.session_state.operating_cost_principal_pos_text = f"{float(operating_cost_principal_pos_default):.2f}"
-                st.session_state.operating_cost_principal_neg_text = f"{float(operating_cost_principal_neg_default):.2f}"
+                st.session_state.operating_cost_pos_value = f"{float(operating_cost_principal_pos_default):.2f}"
+                st.session_state.operating_cost_neg_value = f"{float(operating_cost_principal_neg_default):.2f}"
 
             with col2:
                 operating_cost_principal_pos_str = st.text_input(
                     "Operating cost (Principal > 0) @ 5.0p.a. x Fees paid by Bank",
-                    value=st.session_state.operating_cost_principal_pos_text,
-                    key="operating_cost_principal_pos_text"
+                    value=st.session_state.operating_cost_pos_value,
+                    key="operating_cost_principal_pos_input"
                 )
 
                 # Validate and convert to float
@@ -421,8 +421,8 @@ if st.session_state.df is not None:
             with col3:
                 operating_cost_principal_neg_str = st.text_input(
                     "Operating cost (Principal < 0) @ 5.0p.a. x Fees paid by Bank",
-                    value=st.session_state.operating_cost_principal_neg_text,
-                    key="operating_cost_principal_neg_text"
+                    value=st.session_state.operating_cost_neg_value,
+                    key="operating_cost_principal_neg_input"
                 )
 
                 # Validate and convert to float
