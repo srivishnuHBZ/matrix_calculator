@@ -390,10 +390,11 @@ if st.session_state.df is not None:
                     if principal_outstanding < 0 else 0.0
                 )
 
-            with col2:
-                if "operating_cost_principal_pos_text" not in st.session_state:
-                    st.session_state.operating_cost_principal_pos_text = f"{float(operating_cost_principal_pos_default):.2f}"
+            # Update session state with new default values
+            st.session_state.operating_cost_principal_pos_text = f"{float(operating_cost_principal_pos_default):.2f}"
+            st.session_state.operating_cost_principal_neg_text = f"{float(operating_cost_principal_neg_default):.2f}"
 
+            with col2:
                 operating_cost_principal_pos_str = st.text_input(
                     "Operating cost (Principal > 0) @ 5.0p.a. x Fees paid by Bank",
                     value=st.session_state.operating_cost_principal_pos_text,
@@ -411,9 +412,6 @@ if st.session_state.df is not None:
                     operating_cost_principal_pos = 0.0
 
             with col3:
-                if "operating_cost_principal_neg_text" not in st.session_state:
-                    st.session_state.operating_cost_principal_neg_text = f"{float(operating_cost_principal_neg_default):.2f}"
-
                 operating_cost_principal_neg_str = st.text_input(
                     "Operating cost (Principal < 0) @ 5.0p.a. x Fees paid by Bank",
                     value=st.session_state.operating_cost_principal_neg_text,
