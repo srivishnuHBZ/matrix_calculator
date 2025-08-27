@@ -350,6 +350,7 @@ if st.session_state.df is not None:
                 repayment_period_months_user_input = st.number_input(
                     "Enter Repayment Period in Months",
                     min_value=1,
+                    max_value=None,
                     value=default_repayment_months,
                     step=1,
                     key="repayment_period_months_input"
@@ -392,6 +393,7 @@ if st.session_state.df is not None:
                 operating_cost_principal_pos = st.number_input(
                     "Operating cost (Principal > 0) @ 5.0p.a. x Fees paid by Bank",
                     value=float(operating_cost_principal_pos_default),
+                    step=1.00,
                     format="%.2f",   # Float with 2 decimals
                     key="operating_cost_pos"
                 )
@@ -399,6 +401,7 @@ if st.session_state.df is not None:
                 operating_cost_principal_neg = st.number_input(
                     "Operating cost (Principal < 0) @ 5.0p.a. x Fees paid by Bank",
                     value=float(operating_cost_principal_neg_default),
+                    step=1.00,
                     format="%.2f",   # Float with 2 decimals
                     key="operating_cost_neg"
                 )
@@ -425,6 +428,9 @@ if st.session_state.df is not None:
                 proposed_settlement_amount = st.number_input(
                     "Proposed Settlement Amount",
                     value=0.0,
+                    min_value=0.0,
+                    max_value=None,
+                    step=1.00,
                     format="%.2f",
                     key="proposed_settlement_amount"
                 )
