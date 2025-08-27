@@ -1,0 +1,39 @@
+Principal Outstanding  - Total Write Off Amount - EXCEL
+Total Current Outstanding Balance - Current O/S Balance (Customer Level) - EXCEL
+Proposed Settlement Type (Lump Sum / ATP) - INPUT (DROPDOWN)
+Repayment Period - INPUT (DROPDOWN)
+  a) Lump Sum
+        - 1 month
+        - 3 months
+  b) ATP
+        - < 2years
+        - 2-5 years
+        - >5-7 years
+Waiver % on Interest - GENERATED
+Waiver % in Fees paid by Bank - GENERATED
+Operating cost (Principal > 0) @ 5.0p.a. x Fees paid by Bank  - GENERATED (EDITABLE)
+Operating cost (Principal < 0) @ 5.0p.a. x Fees paid by Bank  - GENERATED (EDITABLE)
+Proposed Settlement Amount - INPUT (FIELD)
+Bank Settlement Matrix (Amount) - GENERATED
+As Per Bank Matrix (Yes /No) - GENERATED
+
+
+*************EXTRA KNOWLEDGE***************
+Write off amount - charge off amt
+Net charge off = used amt - paid amount
+
+1 lump sum amt - both interest is 0
+Principal - right column is empty 
+Without principal - left column is empty
+*******************************************
+
+
+Total Interest =  current_os_balance - principal_outstanding
+Projected Interest (60%) 	 = from Total Interest
+Projected Late Fee (30%) 	 = from Total Interest
+Projected Fees paid by Bank (10%)  = from Total Interest
+Waiver % in Late Charges = static 100
+Waiver in Princpal = static 0
+Operating cost (Principal > 0) @ 5.0p.a. x Fees paid by Bank 	 
+Operating cost (Principal < 0) @ 5.0p.a. x Fees paid by Bank 
+Bank Settlement Matrix (Amount) 
