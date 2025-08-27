@@ -338,7 +338,7 @@ if st.session_state.df is not None:
             elif repayment_period == "3 months":
                 default_repayment_months = 3
             elif repayment_period == "< 2 years":
-                default_repayment_months = 24  # Assuming 2 years max
+                default_repayment_months = 23  # Assuming 2 years max
             elif repayment_period == "2-5 years":
                 default_repayment_months = 60  # Assuming 5 years max
             elif repayment_period == "> 5-7 years":
@@ -364,8 +364,8 @@ if st.session_state.df is not None:
                 allowed_ranges = {
                     "1 month": (1, 1),
                     "3 months": (3, 3),
-                    "< 2 years": (1, 24),
-                    "2-5 years": (25, 60),
+                    "< 2 years": (4, 23),
+                    "2-5 years": (24, 60),
                     "> 5-7 years": (61, 84)
                 }
 
