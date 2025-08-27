@@ -239,6 +239,17 @@ if st.session_state.df is not None:
                     break
             
             if selected_cif:
+                # Check if CIF has changed and reset settlement fields if needed
+                if 'previous_selected_cif' not in st.session_state:
+                    st.session_state.previous_selected_cif = None
+                
+                if st.session_state.previous_selected_cif != selected_cif:
+                    # CIF has changed, explicitly set settlement fields to empty string
+                    st.session_state.settlement_type = ""
+                    st.session_state.repayment_period = ""
+                    # Update the previous CIF tracker
+                    st.session_state.previous_selected_cif = selected_cif
+                
                 st.session_state.selected_cif = selected_cif
     
     # Show selected CIF data
@@ -281,7 +292,8 @@ if st.session_state.df is not None:
             # Dropdown 1: Settlement Type
             settlement_type = st.selectbox(
                 "Proposed Settlement Type",
-                options=["", "Lump Sum", "ATP"]
+                options=["", "Lump Sum", "ATP"],
+                key="settlement_type"
             )
 
         with col2:
@@ -295,7 +307,8 @@ if st.session_state.df is not None:
             repayment_period = st.selectbox(
                 "Repayment Period",
                 options=[""] + repayment_options,
-                disabled=(settlement_type == "")
+                disabled=(settlement_type == ""),
+                key="repayment_period"
             )
 
         if repayment_period:
