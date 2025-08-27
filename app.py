@@ -390,9 +390,16 @@ if st.session_state.df is not None:
                     if principal_outstanding < 0 else 0.0
                 )
 
-            # Update session state with new default values
-            st.session_state.operating_cost_principal_pos_text = f"{float(operating_cost_principal_pos_default):.2f}"
-            st.session_state.operating_cost_principal_neg_text = f"{float(operating_cost_principal_neg_default):.2f}"
+            # Update session state when repayment period changes
+            if "last_repayment_months" not in st.session_state:
+                st.session_state.last_repayment_months = repayment_period_months
+                st.session_state.operating_cost_principal_pos_text = f"{float(operating_cost_principal_pos_default):.2f}"
+                st.session_state.operating_cost_principal_neg_text = f"{float(operating_cost_principal_neg_default):.2f}"
+            elif st.session_state.last_repayment_months != repayment_period_months:
+                # Repayment period has changed, update the default values
+                st.session_state.last_repayment_months = repayment_period_months
+                st.session_state.operating_cost_principal_pos_text = f"{float(operating_cost_principal_pos_default):.2f}"
+                st.session_state.operating_cost_principal_neg_text = f"{float(operating_cost_principal_neg_default):.2f}"
 
             with col2:
                 operating_cost_principal_pos_str = st.text_input(
@@ -427,8 +434,8 @@ if st.session_state.df is not None:
                 except ValueError:
                     st.error("Invalid input. Please enter a number.")
                     operating_cost_principal_neg = 0.0
-
-
+            
+            
             # --- BANK SETTLEMENT MATRIX CALCULATION --- #
             bankFeeWaiverPercent = waivers['bankFeeWaiverPercent'] / 100
             interestWaiverPercent = waivers['interestWaiverPercent'] / 100
@@ -506,14 +513,14 @@ if st.session_state.df is not None:
                     # Round amounts for comparison.
                     rounded_proposed_amount = round(proposed_settlement_amount, 2)
                     rounded_bank_matrix_amount = round(bank_settlement_matrix_amount, 2)
-                    as_per_bank_matrix = "YES" if rounded_proposed_amount >= rounded_bank_matrix_amount else "NO"
+                    as_per_bank_matrix = "✅ YES" if rounded_proposed_amount >= rounded_bank_matrix_amount else "❌ NO"
 
                 metric_placeholder = st.empty()  # placeholder so we can style it
                 metric_placeholder.metric("As Per Bank Matrix (Yes / No)", as_per_bank_matrix)
 
-                if as_per_bank_matrix == "NO":
+                if as_per_bank_matrix == "❌ NO":
                     color = "rgba(231, 76, 60, 0.12)"  # subtle red
-                elif as_per_bank_matrix == "YES":
+                elif as_per_bank_matrix == "✅ YES":
                     color = "rgba(46, 204, 113, 0.12)"  # subtle green
                 else:
                     color = None
