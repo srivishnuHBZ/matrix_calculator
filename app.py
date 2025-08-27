@@ -375,6 +375,12 @@ if st.session_state.df is not None:
                     error_message_placeholder.error(f"Repayment month(s) must be between {min_months} and {max_months} months for the selected Repayment Period.")
 
 
+            # Initialize operating cost text inputs in session state if they don't exist
+            if 'operating_cost_principal_pos_text' not in st.session_state:
+                st.session_state.operating_cost_principal_pos_text = "0.00"
+            if 'operating_cost_principal_neg_text' not in st.session_state:
+                st.session_state.operating_cost_principal_neg_text = "0.00"
+
             # --- OPERATING COST CALCULATION --- #
             if repayment_period_months == 1:
                 # For a 1-month lump sum repayment, operating costs are set to zero
@@ -397,7 +403,6 @@ if st.session_state.df is not None:
             with col2:
                 operating_cost_principal_pos_str = st.text_input(
                     "Operating cost (Principal > 0) @ 5.0p.a. x Fees paid by Bank",
-                    value=st.session_state.operating_cost_principal_pos_text,
                     key="operating_cost_principal_pos_text"
                 )
 
@@ -414,7 +419,6 @@ if st.session_state.df is not None:
             with col3:
                 operating_cost_principal_neg_str = st.text_input(
                     "Operating cost (Principal < 0) @ 5.0p.a. x Fees paid by Bank",
-                    value=st.session_state.operating_cost_principal_neg_text,
                     key="operating_cost_principal_neg_text"
                 )
 
