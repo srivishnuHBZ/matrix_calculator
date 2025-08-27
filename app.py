@@ -330,6 +330,7 @@ if st.session_state.df is not None:
             with cols[7]:
                 st.metric("Waiver in Principal", "0%")
 
+
             # --- REPAYMENT PERIOD IN MONTHS --- #
             default_repayment_months = 1 # Default to 1 month
             if repayment_period == "1 month":
@@ -390,21 +391,45 @@ if st.session_state.df is not None:
                 )
 
             with col2:
-                operating_cost_principal_pos = st.number_input(
+                if "operating_cost_principal_pos_text" not in st.session_state:
+                    st.session_state.operating_cost_principal_pos_text = f"{float(operating_cost_principal_pos_default):.2f}"
+
+                operating_cost_principal_pos_str = st.text_input(
                     "Operating cost (Principal > 0) @ 5.0p.a. x Fees paid by Bank",
-                    value=float(operating_cost_principal_pos_default),
-                    step=1.00,
-                    format="%.2f",   # Float with 2 decimals
-                    key="operating_cost_pos"
+                    value=st.session_state.operating_cost_principal_pos_text,
+                    key="operating_cost_principal_pos_text"
                 )
+
+                # Validate and convert to float
+                try:
+                    operating_cost_principal_pos = float(operating_cost_principal_pos_str)
+                    if operating_cost_principal_pos < 0:
+                        st.error("Operating cost (Principal > 0) cannot be negative.")
+                        operating_cost_principal_pos = 0.0
+                except ValueError:
+                    st.error("Invalid input. Please enter a number.")
+                    operating_cost_principal_pos = 0.0
+
             with col3:
-                operating_cost_principal_neg = st.number_input(
+                if "operating_cost_principal_neg_text" not in st.session_state:
+                    st.session_state.operating_cost_principal_neg_text = f"{float(operating_cost_principal_neg_default):.2f}"
+
+                operating_cost_principal_neg_str = st.text_input(
                     "Operating cost (Principal < 0) @ 5.0p.a. x Fees paid by Bank",
-                    value=float(operating_cost_principal_neg_default),
-                    step=1.00,
-                    format="%.2f",   # Float with 2 decimals
-                    key="operating_cost_neg"
+                    value=st.session_state.operating_cost_principal_neg_text,
+                    key="operating_cost_principal_neg_text"
                 )
+
+                # Validate and convert to float
+                try:
+                    operating_cost_principal_neg = float(operating_cost_principal_neg_str)
+                    if operating_cost_principal_neg < 0:
+                        st.error("Operating cost (Principal < 0) cannot be negative.")
+                        operating_cost_principal_neg = 0.0
+                except ValueError:
+                    st.error("Invalid input. Please enter a number.")
+                    operating_cost_principal_neg = 0.0
+
 
             # --- BANK SETTLEMENT MATRIX CALCULATION --- #
             bankFeeWaiverPercent = waivers['bankFeeWaiverPercent'] / 100
@@ -423,17 +448,29 @@ if st.session_state.df is not None:
             
             col_proposed_amount, col_bank_matrix, col_as_per_bank = st.columns(3)
 
+
             # --- PROPOSED SETTLEMENT AMOUNT --- #
             with col_proposed_amount:
-                proposed_settlement_amount = st.number_input(
+                # Use st.text_input for better input experience, then validate
+                if "proposed_settlement_amount_text" not in st.session_state:
+                    st.session_state.proposed_settlement_amount_text = "0.00"
+
+                proposed_settlement_amount_str = st.text_input(
                     "Proposed Settlement Amount",
-                    value=0.0,
-                    min_value=0.0,
-                    max_value=None,
-                    step=1.00,
-                    format="%.2f",
-                    key="proposed_settlement_amount"
+                    value=st.session_state.proposed_settlement_amount_text,
+                    key="proposed_settlement_amount_text"
                 )
+                
+                # Validate and convert to float
+                try:
+                    proposed_settlement_amount = float(proposed_settlement_amount_str)
+                    if proposed_settlement_amount < 0:
+                        st.error("Proposed Settlement Amount cannot be negative.")
+                        proposed_settlement_amount = 0.0 # Reset to 0 if invalid
+                except ValueError:
+                    st.error("Invalid input for Proposed Settlement Amount. Please enter a number.")
+                    proposed_settlement_amount = 0.0 # Reset to 0 if invalid
+
             
             with col_bank_matrix:
                 calculation_steps = (
@@ -468,14 +505,17 @@ if st.session_state.df is not None:
                 # --- BANK MATRIX & METRICS STYLING --- #
                 as_per_bank_matrix = "N/A"
                 if proposed_settlement_amount > 0:
-                    as_per_bank_matrix = "Yes" if proposed_settlement_amount >= bank_settlement_matrix_amount else "No"
+                    # Round amounts for comparison.
+                    rounded_proposed_amount = round(proposed_settlement_amount, 2)
+                    rounded_bank_matrix_amount = round(bank_settlement_matrix_amount, 2)
+                    as_per_bank_matrix = "YES" if rounded_proposed_amount >= rounded_bank_matrix_amount else "NO"
 
                 metric_placeholder = st.empty()  # placeholder so we can style it
                 metric_placeholder.metric("As Per Bank Matrix (Yes / No)", as_per_bank_matrix)
 
-                if as_per_bank_matrix == "No":
+                if as_per_bank_matrix == "NO":
                     color = "rgba(231, 76, 60, 0.12)"  # subtle red
-                elif as_per_bank_matrix == "Yes":
+                elif as_per_bank_matrix == "YES":
                     color = "rgba(46, 204, 113, 0.12)"  # subtle green
                 else:
                     color = None
@@ -501,9 +541,6 @@ if st.session_state.df is not None:
                         """,
                         unsafe_allow_html=True
                     )
-
-            
-            
-        
+     
 else:
     st.info("Please upload an Excel file")
