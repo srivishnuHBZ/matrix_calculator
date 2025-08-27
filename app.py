@@ -459,7 +459,6 @@ if st.session_state.df is not None:
 
                 proposed_settlement_amount_str = st.text_input(
                     "Proposed Settlement Amount",
-                    value=st.session_state.proposed_settlement_amount_text,
                     key="proposed_settlement_amount_text"
                 )
                 
