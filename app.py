@@ -248,7 +248,7 @@ if st.session_state.df is not None:
                     
         # Get data for selected CIF and show in table
         cif_data = st.session_state.df[st.session_state.df['CIF No.'] == st.session_state.selected_cif]
-        st.dataframe(cif_data, use_container_width=True)
+        st.dataframe(cif_data, width='stretch')
         
         # --- CALCULATION FOR PRINCIPAL, O/S BALANCE & AGEING DATE --- #
         principal_outstanding = cif_data['Total Write Off Amount'].sum(skipna=True) if 'Total Write Off Amount' in cif_data else 0
