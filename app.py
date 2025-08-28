@@ -376,7 +376,7 @@ if st.session_state.df is not None:
                 # Define allowed ranges for each repayment period type
                 allowed_ranges = {
                     "1 month": (1, 1),
-                    "3 months": (3, 3),
+                    "3 months": (2, 3),
                     "< 2 years": (4, 23),
                     "2-5 years": (24, 60),
                     "> 5-7 years": (61, 84)
