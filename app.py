@@ -280,7 +280,7 @@ if st.session_state.df is not None:
         
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric("Principal Outstanding", f"{principal_outstanding:,.2f}")
+            st.metric("Principal Outstanding (Net Charge Off)", f"{principal_outstanding:,.2f}")
         with col2:
             st.metric("Total Current Outstanding Balance", f"{current_os_balance:,.2f}")
         with col3:
