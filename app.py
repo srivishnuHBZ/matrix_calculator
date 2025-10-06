@@ -24,7 +24,7 @@ def load_excel_file(uploaded_file):
         # Important columns only
         important_columns = [
             'Account No', 'Current O/S Balance', 'Current O/S Balance (Customer Level)',
-            'CIF No.', 'Write Off Date', 'Last Amount Paid', 'Total Write Off Amount'
+            'CIF No.', 'Write Off Date', 'Last Amount Paid', 'Total Write Off Amount', 'Net Charge Off'
         ]
         
         existing_columns = [col for col in important_columns if col in df.columns]
@@ -262,7 +262,8 @@ if st.session_state.df is not None:
         st.dataframe(cif_data, width='stretch')
         
         # --- CALCULATION FOR PRINCIPAL, O/S BALANCE & AGEING DATE --- #
-        principal_outstanding = cif_data['Total Write Off Amount'].sum(skipna=True) if 'Total Write Off Amount' in cif_data else 0
+        # principal_outstanding = cif_data['Total Write Off Amount'].sum(skipna=True) if 'Total Write Off Amount' in cif_data else 0
+        principal_outstanding = cif_data['Net Charge Off'].sum(skipna=True) if 'Net Charge Off' in cif_data else 0
         current_os_balance = cif_data['Current O/S Balance (Customer Level)'].iloc[0] if 'Current O/S Balance (Customer Level)' in cif_data and not cif_data['Current O/S Balance (Customer Level)'].empty else 0
         
         ageing_classification = "N/A"
