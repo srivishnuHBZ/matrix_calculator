@@ -1,0 +1,5 @@
+calculators/__pycache__/
+/calculators/__pycache__/*
+
+shared/__pycache__/
+/shared/__pycache__/*

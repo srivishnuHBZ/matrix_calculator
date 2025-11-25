@@ -11,9 +11,9 @@ def initialize_session_state():
     if 'enabled_tabs' not in st.session_state:
         st.session_state.enabled_tabs = set()
     
-    # Active tab tracking
-    if 'active_tab' not in st.session_state:
-        st.session_state.active_tab = None
+    # Active tab tracking (0=CC, 1=PL, 2=HP)
+    if 'active_tab_index' not in st.session_state:
+        st.session_state.active_tab_index = None
     
     # Selected CIF per financing type
     if 'selected_cif_cc' not in st.session_state:

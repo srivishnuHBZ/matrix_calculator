@@ -137,7 +137,7 @@ def display_cif_data_table(df, cif_no):
     
     if not cif_data.empty:
         st.subheader(f"CIF: {cif_no}")
-        st.dataframe(cif_data, use_container_width=True)
+        st.dataframe(cif_data, width='stretch')
         return cif_data
     
     return None

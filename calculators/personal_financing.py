@@ -52,7 +52,7 @@ def get_waiver_percentage_pl(settlement_type, repayment_period, ageing_classific
                         'lateChargesWaiverPercent': 100
                     }
                 elif repayment_period == "2-5 years":
-                    st.error('Warning: Installments exceeding 2 years are not allowed for cases with principal > 0 and ageing ≤ 3 years. Please choose the <2 years option!', icon='⚠️')
+                    # st.error('Warning: Installments exceeding 2 years are not allowed for cases with principal > 0 and ageing ≤ 3 years. Please choose the <2 years option!', icon='⚠️')
                     return {
                         'principalWaiverPercent': 0,
                         'bankFeeWaiverPercent': 0,
