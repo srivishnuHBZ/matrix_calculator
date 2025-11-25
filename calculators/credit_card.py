@@ -1,0 +1,415 @@
+import streamlit as st
+import pandas as pd
+
+def get_waiver_percentage(settlement_type, repayment_period, ageing_classification, principal_outstanding): 
+    # """Returns: dict: {'bankFeeWaiverPercent': %, 'interestWaiverPercent': %}"""
+    
+    has_principal = principal_outstanding > 0
+    
+    if settlement_type == "Lump Sum":
+        # Without Principal <=0
+        if not has_principal:  
+            if ageing_classification == "<5 years":
+                if repayment_period == "1 month":
+                    return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 75}
+                elif repayment_period == "3 months":
+                    return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 50}
+                    
+            elif ageing_classification == "5-10 years":
+                if repayment_period == "1 month":
+                    return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 80}
+                elif repayment_period == "3 months":
+                    return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 70}
+                    
+            elif ageing_classification == ">10 years":
+                if repayment_period == "1 month":
+                    return {'bankFeeWaiverPercent': 80, 'interestWaiverPercent': 100}
+                elif repayment_period == "3 months":
+                    return {'bankFeeWaiverPercent': 80, 'interestWaiverPercent': 100}
+        
+        # With Principal > 0
+        if ageing_classification == "<5 years":
+            if repayment_period == "1 month":
+                return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 65}
+            elif repayment_period == "3 months":
+                return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 45}
+                
+        elif ageing_classification == "5-10 years":
+            if repayment_period == "1 month":
+                return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 75}
+            elif repayment_period == "3 months":
+                return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 65}
+                
+        elif ageing_classification == ">10 years":
+            if repayment_period == "1 month":
+                return {'bankFeeWaiverPercent': 80, 'interestWaiverPercent': 100}
+            elif repayment_period == "3 months":
+                return {'bankFeeWaiverPercent': 70, 'interestWaiverPercent': 100}
+                
+    elif settlement_type == "ATP":
+        # Without Principal <=0
+        if not has_principal: 
+            if ageing_classification == "<5 years":
+                if repayment_period == "< 2 years":
+                    return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 50}
+                elif repayment_period == "2-5 years":
+                    st.error('Warning: Installments exceeding 2 years are not allowed for cases with zero principal. Please choose the < 2 years option!', icon='⚠️')
+                    return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 0}
+                elif repayment_period == "> 5-7 years":
+                    st.error('Warning: Installments exceeding 2 years are not allowed for cases with zero principal. Please choose the < 2 years option!', icon='⚠️')
+                    return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 0}
+                    
+            elif ageing_classification == "5-10 years":
+                if repayment_period == "< 2 years":
+                    return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 75}
+                elif repayment_period == "2-5 years":
+                    st.error('Warning: Installments exceeding 2 years are not allowed for cases with zero principal. Please choose the < 2 years option!', icon='⚠️')
+                    return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 0}
+                elif repayment_period == "> 5-7 years":
+                    st.error('Warning: Installments exceeding 2 years are not allowed for cases with zero principal. Please choose the < 2 years option!', icon='⚠️')
+                    return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 0}
+                    
+            elif ageing_classification == ">10 years":
+                if repayment_period == "< 2 years":
+                    return {'bankFeeWaiverPercent': 50, 'interestWaiverPercent': 90}
+                elif repayment_period == "2-5 years":
+                    return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 0}
+                elif repayment_period == "> 5-7 years":
+                    return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 0}
+        
+        # Principal > 0
+        if ageing_classification == "<5 years":
+            if repayment_period == "< 2 years":
+                return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 40}
+            elif repayment_period == "2-5 years":
+                return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 25}
+            elif repayment_period == "> 5-7 years":
+                return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 10}
+                
+        elif ageing_classification == "5-10 years":
+            if repayment_period == "< 2 years":
+                return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 60}
+            elif repayment_period == "2-5 years":
+                return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 30}
+            elif repayment_period == "> 5-7 years":
+                return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 20}
+                
+        elif ageing_classification == ">10 years":
+            if repayment_period == "< 2 years":
+                return {'bankFeeWaiverPercent': 75, 'interestWaiverPercent': 100}
+            elif repayment_period == "2-5 years":
+                return {'bankFeeWaiverPercent': 50, 'interestWaiverPercent': 100}
+            elif repayment_period == "> 5-7 years":
+                return {'bankFeeWaiverPercent': 25, 'interestWaiverPercent': 100}
+    
+    return {'bankFeeWaiverPercent': 0, 'interestWaiverPercent': 0}
+
+def validate_columns(cif_data):
+    """Validate that required columns exist for Credit Card calculations"""
+    required_columns = [
+        'Current O/S Balance (Customer Level)',
+        'Total Write Off Amount',
+        'Write Off Date'
+    ]
+    
+    missing = [col for col in required_columns if col not in cif_data.columns]
+    
+    if missing:
+        st.error(f"Missing required columns for Credit Card: {', '.join(missing)}")
+        return False
+    
+    return True
+
+def run_credit_card_calculator(cif_data):
+    """Main Credit Card calculator logic"""
+    
+    if not validate_columns(cif_data):
+        return
+    
+    # --- CALCULATION FOR PRINCIPAL, O/S BALANCE & AGEING DATE --- #
+    principal_outstanding = cif_data['Net Charge Off'].sum(skipna=True) if 'Net Charge Off' in cif_data else 0
+    # from old app.py
+    # current_os_balance = cif_data['Current O/S Balance (Customer Level)'].iloc[0] if 'Current O/S Balance (Customer Level)' in cif_data and not cif_data['Current O/S Balance (Customer Level)'].empty else 0
+    current_os_balance = cif_data['Current O/S Balance (Customer Level)'].iloc[0] if not cif_data['Current O/S Balance (Customer Level)'].empty else 0
+    
+    ageing_classification = "N/A"
+    latest_writeoff_date = None
+    if 'Write Off Date' in cif_data and not cif_data['Write Off Date'].dropna().empty:
+        latest_writeoff_date = pd.to_datetime(cif_data['Write Off Date']).max()
+        years_diff = (pd.Timestamp.today() - latest_writeoff_date).days / 365
+        
+        if years_diff < 5:
+            ageing_classification = "<5 years"
+        elif 5 <= years_diff <= 10:
+            ageing_classification = "5-10 years"
+        else:
+            ageing_classification = ">10 years"
+    
+    # Display metrics
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Principal Outstanding (Net Charge Off)", f"{principal_outstanding:,.2f}")
+    with col2:
+        st.metric("Total Current Outstanding Balance", f"{current_os_balance:,.2f}")
+    with col3:
+        st.metric("Ageing from Charge Off Date", ageing_classification,
+                help=f"Latest Write Off Date: {latest_writeoff_date.date() if latest_writeoff_date else 'N/A'}")
+    
+    # --- SETTLEMENT TYPE AND REPAYMENT PERIOD DROPDOWN  --- #
+    col1, col2 = st.columns(2)
+    with col1:
+        # Dropdown 1: Settlement Type
+        settlement_type = st.selectbox(
+            "Proposed Settlement Type",
+            options=["", "Lump Sum", "ATP"],
+            key="settlement_type_cc"
+        )
+
+    with col2:
+        # Dropdown 2: Repayment Period (depends on Settlement Type)
+        repayment_options = []
+        if settlement_type == "Lump Sum":
+            repayment_options = ["1 month", "3 months"]
+        elif settlement_type == "ATP":
+            repayment_options = ["< 2 years", "2-5 years", "> 5-7 years"]
+
+        repayment_period = st.selectbox(
+            "Repayment Period",
+            options=[""] + repayment_options,
+            disabled=(settlement_type == ""),
+            key="repayment_period_cc"
+        )
+
+    if not repayment_period:
+        return
+    
+    # --- WAIVER PERCENTAGE & INTEREST CALCULATION --- #
+    waivers = get_waiver_percentage(settlement_type, repayment_period, ageing_classification, principal_outstanding)
+    bank_fee_waiver_percent_display = f"{waivers['bankFeeWaiverPercent']}%"
+    interest_waiver_percent_display = f"{waivers['interestWaiverPercent']}%"
+    
+    # Calculate interest-related metrics
+    total_interest = current_os_balance - principal_outstanding
+    projected_interest_60 = total_interest * 0.60
+    projected_late_fee_30 = total_interest * 0.30
+    projected_bank_fees_10 = total_interest * 0.10
+
+    # Display waivers and projections
+    cols = st.columns(8) 
+    with cols[0]:
+        st.metric("Waiver % in Fees paid by Bank", bank_fee_waiver_percent_display)
+    with cols[1]:
+        st.metric("Waiver % on Interest", interest_waiver_percent_display)
+    with cols[2]:
+        st.metric("Total Interest / Late Charge / Other Charges", f"{total_interest:,.2f}")
+    with cols[3]:
+        st.metric("Projected Interest (60%)", f"{projected_interest_60:,.2f}")
+    with cols[4]:
+        st.metric("Projected Late Fee (30%)", f"{projected_late_fee_30:,.2f}")
+    with cols[5]:
+        st.metric("Projected Fees paid by Bank (10%)", f"{projected_bank_fees_10:,.2f}")
+    with cols[6]:
+        st.metric("Waiver % in Late Charges", "100%")
+    with cols[7]:
+        st.metric("Waiver in Principal", "0%")
+
+    # --- REPAYMENT PERIOD IN MONTHS --- #
+    default_repayment_months = 1 # Default to 1 month
+    if repayment_period == "1 month":
+        default_repayment_months = 1
+    elif repayment_period == "3 months":
+        default_repayment_months = 3
+    elif repayment_period == "< 2 years":
+        default_repayment_months = 23 # Assuming 2 years max
+    elif repayment_period == "2-5 years":
+        default_repayment_months = 60 # Assuming 5 years max
+    elif repayment_period == "> 5-7 years":
+        default_repayment_months = 84 # Assuming 7 years max
+
+    error_message_placeholder = st.empty()
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        repayment_period_months_user_input = st.number_input(
+            "Enter Repayment Period in Months",
+            min_value=1,
+            max_value=None,
+            value=default_repayment_months,
+            step=1,
+            key="repayment_period_months_input_cc"
+        )
+
+        repayment_period_months = repayment_period_months_user_input
+
+        # Validate user input
+        allowed_ranges = {
+            "1 month": (1, 1),
+            "3 months": (2, 3),
+            "< 2 years": (4, 23),
+            "2-5 years": (24, 60),
+            "> 5-7 years": (61, 84)
+        }
+
+        min_months, max_months = allowed_ranges.get(repayment_period, (1, 1))
+        if not (min_months <= repayment_period_months_user_input <= max_months):
+            error_message_placeholder.error(f"Repayment month(s) must be between {min_months} and {max_months} months for the selected Repayment Period.")
+
+    # --- OPERATING COST CALCULATION --- #
+    if repayment_period_months == 1:
+        # For a 1-month lump sum repayment, operating costs are set to zero
+        operating_cost_principal_pos_default = 0.0
+        operating_cost_principal_neg_default = 0.0
+    else:
+        operating_cost_principal_pos_default = (
+            (0.05 / 12 * (principal_outstanding + projected_bank_fees_10)) * repayment_period_months
+            if principal_outstanding > 0 else 0.0
+        )
+        operating_cost_principal_neg_default = (
+            (0.05 / 12 * (principal_outstanding + projected_bank_fees_10)) * repayment_period_months
+            if principal_outstanding < 0 else 0.0
+        )
+
+    # Update session state when repayment period changes
+    if "last_repayment_months_cc" not in st.session_state:
+        st.session_state.last_repayment_months_cc = repayment_period_months
+        st.session_state.operating_cost_pos_value_cc = f"{float(operating_cost_principal_pos_default):.2f}"
+        st.session_state.operating_cost_neg_value_cc = f"{float(operating_cost_principal_neg_default):.2f}"
+    elif st.session_state.last_repayment_months_cc != repayment_period_months:
+        st.session_state.last_repayment_months_cc = repayment_period_months
+        st.session_state.operating_cost_pos_value_cc = f"{float(operating_cost_principal_pos_default):.2f}"
+        st.session_state.operating_cost_neg_value_cc = f"{float(operating_cost_principal_neg_default):.2f}"
+
+    with col2:
+        operating_cost_principal_pos_str = st.text_input(
+            "Operating cost (Principal > 0) @ 5.0p.a. x Fees paid by Bank",
+            value=st.session_state.operating_cost_pos_value_cc,
+            key="operating_cost_principal_pos_input_cc"
+        )
+
+        try:
+            operating_cost_principal_pos = float(operating_cost_principal_pos_str)
+            if operating_cost_principal_pos < 0:
+                st.error("Operating cost (Principal > 0) cannot be negative.")
+                operating_cost_principal_pos = 0.0
+        except ValueError:
+            st.error("Invalid input. Please enter a number.")
+            operating_cost_principal_pos = 0.0
+
+    with col3:
+        operating_cost_principal_neg_str = st.text_input(
+            "Operating cost (Principal < 0) @ 5.0p.a. x Fees paid by Bank",
+            value=st.session_state.operating_cost_neg_value_cc,
+            key="operating_cost_principal_neg_input_cc"
+        )
+
+        try:
+            operating_cost_principal_neg = float(operating_cost_principal_neg_str)
+            if operating_cost_principal_neg < 0:
+                st.error("Operating cost (Principal < 0) cannot be negative.")
+                operating_cost_principal_neg = 0.0
+        except ValueError:
+            st.error("Invalid input. Please enter a number.")
+            operating_cost_principal_neg = 0.0
+    
+    # --- BANK SETTLEMENT MATRIX CALCULATION --- #
+    bankFeeWaiverPercent = waivers['bankFeeWaiverPercent'] / 100
+    interestWaiverPercent = waivers['interestWaiverPercent'] / 100
+
+    # Formula from Excel:
+    # Bank Settlement Matrix (Amount) = (AS*(1-AV)) + (AT*(1-AW)) + (AU*(1-AX)) + AY*((1-AZ)) + BA + BB
+    bank_settlement_matrix_amount = (
+        (projected_interest_60 * (1 - interestWaiverPercent)) +
+        (projected_late_fee_30 * (1 - 1)) +  # (1-100%) is 0, so this term becomes 0
+        (projected_bank_fees_10 * (1 - bankFeeWaiverPercent)) +
+        (principal_outstanding * (1 - 0)) +  # (1-0%) is 1, so this term becomes principal_outstanding
+        operating_cost_principal_pos +
+        operating_cost_principal_neg
+    )
+    
+    col_proposed_amount, col_bank_matrix, col_as_per_bank = st.columns(3)
+
+    # --- PROPOSED SETTLEMENT AMOUNT --- #
+    with col_proposed_amount:
+        if "proposed_settlement_amount_text_cc" not in st.session_state:
+            st.session_state.proposed_settlement_amount_text_cc = "0.00"
+
+        proposed_settlement_amount_str = st.text_input(
+            "Proposed Settlement Amount",
+            key="proposed_settlement_amount_text_cc"
+        )
+        
+        try:
+            proposed_settlement_amount = float(proposed_settlement_amount_str)
+            if proposed_settlement_amount < 0:
+                st.error("Proposed Settlement Amount cannot be negative.")
+                proposed_settlement_amount = 0.0  # Reset to 0 if invalid
+        except ValueError:
+            st.error("Invalid input for Proposed Settlement Amount. Please enter a number.")
+            proposed_settlement_amount = 0.0  # Reset to 0 if invalid
+
+    with col_bank_matrix:
+        calculation_steps = (
+            "--- Bank Settlement Matrix Breakdown ---\n\n"
+            f"1. Projected Interest (60%):\n"
+            f"   RM{projected_interest_60:,.2f} * (1 - {interestWaiverPercent*100:.0f}% Interest Waiver) "
+            f"= RM{projected_interest_60 * (1 - interestWaiverPercent):,.2f}\n\n"
+            
+            f"2. Projected Late Fee (30%):\n"
+            f"   RM{projected_late_fee_30:,.2f} * (1 - 100% Waiver) = RM0.00\n\n"
+            
+            f"3. Projected Bank Fees (10%):\n"
+            f"   RM{projected_bank_fees_10:,.2f} * (1 - {bankFeeWaiverPercent*100:.0f}% Bank Fee Waiver) "
+            f"= RM{projected_bank_fees_10 * (1 - bankFeeWaiverPercent):,.2f}\n\n"
+            
+            f"4. Principal Outstanding:\n"
+            f"   RM{principal_outstanding:,.2f} * (1 - 0% Waiver) = RM{principal_outstanding:,.2f}\n\n"
+            
+            f"5. Operating Costs:\n"
+            f"   - Principal > 0: RM{operating_cost_principal_pos:,.2f}\n"
+            f"   - Principal < 0: RM{operating_cost_principal_neg:,.2f}\n\n"
+        )
+
+        st.metric(
+            "Bank Settlement Matrix (Amount)",
+            f"RM{bank_settlement_matrix_amount:,.2f}",
+            help=calculation_steps
+        )
+
+    with col_as_per_bank:
+        # --- BANK MATRIX & METRICS STYLING --- #
+        as_per_bank_matrix = "N/A"
+        if proposed_settlement_amount > 0:
+            rounded_proposed_amount = round(proposed_settlement_amount, 2)
+            rounded_bank_matrix_amount = round(bank_settlement_matrix_amount, 2)
+            as_per_bank_matrix = "✅ YES" if rounded_proposed_amount >= rounded_bank_matrix_amount else "❌ NO"
+
+        metric_placeholder = st.empty()
+        metric_placeholder.metric("As Per Bank Matrix (Yes / No)", as_per_bank_matrix)
+
+        if as_per_bank_matrix == "❌ NO":
+            color = "rgba(231, 76, 60, 0.12)"  # subtle red
+        elif as_per_bank_matrix == "✅ YES":
+            color = "rgba(46, 204, 113, 0.12)"  # subtle green
+        else:
+            color = None
+
+        if color:
+            color_fade = color.replace('0.12', '0.18')
+            st.markdown(
+                f"""
+                <style>
+                @keyframes highlight-fade-subtle {{
+                    0%   {{ background-color: {color}; }}
+                    50%  {{ background-color: {color_fade}; }}
+                    100% {{ background-color: {color}; }}
+                }}
+
+                div[data-testid="stMetric"] {{
+                    border-radius: 12px;
+                    animation: highlight-fade-subtle 2.5s ease-in-out infinite;
+                    transition: all 0.3s ease-in-out;
+                }}
+                </style>
+                """,
+                unsafe_allow_html=True
+            )

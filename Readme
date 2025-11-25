@@ -1,3 +1,84 @@
+Financial Matrix Calculator
+project/
+├── app.py                          # Main application entry point
+├── requirements.txt                # Python dependencies
+├── shared/                         # Shared utilities
+│   ├── __init__.py
+│   ├── session_state.py           # Session state management
+│   └── data_handler.py            # File upload, filtering, CIF search
+└── calculators/                    # Financing-type specific calculators
+    ├── __init__.py
+    ├── credit_card.py             # Credit Card calculator (COMPLETE)
+    ├── personal_financing.py      # Personal Financing calculator (TODO)
+    └── hire_purchase.py           # Hire Purchase calculator (TODO)
+
+
+📊 How It Works
+
+File Upload
+
+Upload an Excel file containing financing records
+The app auto-detects the financing type based on the Product Group column:
+
+CC = Credit Card
+PL = Personal Financing
+HP = Hire Purchase
+
+
+Tab Navigation
+
+1. Credit Card tab: Enabled when file contains CC records
+2. Personal Financing tab: Enabled when file contains PL records
+3. Hire Purchase tab: Enabled when file contains HP records
+4. Tabs are automatically disabled if their financing type is not present in the uploaded file
+
+Data Flow
+
+1. Upload Excel → Detects Product Group → Enables relevant tabs
+2. Select a tab → Filter data by Product Group (CC/PL/HP)
+3. Search and select CIF → Display account data
+4. Enter settlement details → Calculate matrix
+
+📋 Required Columns
+1. Credit Card (CC)
+      * Account No
+      * Product Group
+      * CIF No.
+      * Current O/S Balance
+      * Current O/S Balance (Customer Level)
+      * Write Off Date
+      * Last Payment Amount
+      * Total Write Off Amount
+
+2. Personal Financing (PL) / Hire Purchase (HP)
+
+      * Account No
+      * Product Group
+      * CIF No.
+      * Misc Cost
+      * Late/Compensation Charges
+      * Memo Late/Compensation Charges
+      * Other Charge
+      * Payoff Amount
+      * Current Balance
+      * Islamic Flag
+      * Write Off Date - Approved Date
+      * Write Off IIS
+      * O/S Balance Plus
+
+✅ Implementation Status
+
+ File upload and Product Group detection
+ Tab navigation with auto-enable/disable
+ CIF search and selection (shared across all types)
+ Credit Card calculator (COMPLETE)
+ Personal Financing calculator (TODO - implement waiver matrix and formulas)
+ Hire Purchase calculator (TODO - implement waiver matrix and formulas)
+
+
+
+// OLD README         // OLD README      //OLD README
+
 Principal Outstanding  - Total Write Off Amount - EXCEL
 Total Current Outstanding Balance - Current O/S Balance (Customer Level) - EXCEL
 Proposed Settlement Type (Lump Sum / ATP) - INPUT (DROPDOWN)
