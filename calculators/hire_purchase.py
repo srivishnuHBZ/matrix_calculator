@@ -191,7 +191,7 @@ def run_hire_purchase_calculator(cif_data):
     other_charge_col = col_map['Other Charge']
     other_charge = cif_data[other_charge_col].sum(skipna=True)
     
-    others_charges = misc_cost - other_charge
+    others_charges = misc_cost + other_charge
     
     # Late Payment Interest / Compensation Charges
     memo_late_col = col_map['Memo Late']
