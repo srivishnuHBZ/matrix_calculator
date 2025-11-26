@@ -183,9 +183,7 @@ def run_personal_financing_calculator(cif_data):
     iis = cif_data[iis_col].sum(skipna=True)
     memo_late = cif_data[memo_late_col].sum(skipna=True)
     late = cif_data[late_col].sum(skipna=True)
-    
-    principal_outstanding = os_balance - iis - memo_late - late
-    
+        
     # Interest / Profit
     interest_profit = iis
     
@@ -196,13 +194,16 @@ def run_personal_financing_calculator(cif_data):
     misc_cost = cif_data[misc_cost_col].sum(skipna=True)
     other_charge = cif_data[other_charge_col].sum(skipna=True)
     
-    others_charges = misc_cost - other_charge
+    others_charges = misc_cost + other_charge
     
     # Late Payment Interest / Compensation Charges
     late_payment_charges = late + memo_late
     
+    # Principal Outstanding
+    principal_outstanding = os_balance - iis - memo_late - late - others_charges
+        
     # Total Current Outstanding Balance
-    total_current_os = principal_outstanding + interest_profit + others_charges + late_payment_charges
+    total_current_os = os_balance
     
     # Ageing Classification
     ageing_classification = "N/A"
