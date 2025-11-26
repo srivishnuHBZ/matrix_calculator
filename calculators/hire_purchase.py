@@ -134,6 +134,7 @@ def validate_columns(cif_data):
         'Write Off Date': ['write off date', 'writeoff date', 'charged off date'],
         'Write Off IIS': ['iis', 'write off iis'],
         'Current Balance': ['current balance'],
+        'O/S Balance': ['o/s balance', 'os balance', 'outstanding balance'],
         'Misc Cost': ['misc cost', 'misc charge'],
         'Other Charge': ['other charge', 'other charges'],
         'Late': ['late', 'late/compensation charges', 'late compensation'],
@@ -173,38 +174,38 @@ def run_hire_purchase_calculator(cif_data):
     islamic_flag = str(islamic_flag).strip().lower() in ['yes', 'y', 'true', '1']
     
     # Calculate Principal Outstanding
-    # HP Formula: Principal = Current balance - IIS (simpler than PL)
+    # HP Formula: Principal = Current balance - IIS 
     current_balance_col = col_map['Current Balance']
-    iis_col = col_map['Write Off IIS']
-    
     current_balance = cif_data[current_balance_col].sum(skipna=True)
+    os_balance_col = col_map['O/S Balance']
+    os_balance = cif_data[os_balance_col].sum(skipna=True)
+    iis_col = col_map['Write Off IIS']
     iis = cif_data[iis_col].sum(skipna=True)
-    
-    principal_outstanding = current_balance - iis
-    
+       
     # Interest / Profit
     interest_profit = iis
     
     # Others Charges = Misc Cost - Other Charge
     misc_cost_col = col_map['Misc Cost']
-    other_charge_col = col_map['Other Charge']
-    
     misc_cost = cif_data[misc_cost_col].sum(skipna=True)
+    other_charge_col = col_map['Other Charge']
     other_charge = cif_data[other_charge_col].sum(skipna=True)
     
     others_charges = misc_cost - other_charge
     
     # Late Payment Interest / Compensation Charges
     memo_late_col = col_map['Memo Late']
-    late_col = col_map['Late']
-    
     memo_late = cif_data[memo_late_col].sum(skipna=True)
+    late_col = col_map['Late'] 
     late = cif_data[late_col].sum(skipna=True)
     
     late_payment_charges = late + memo_late
     
+    # Principal Outstanding    
+    principal_outstanding = current_balance - iis
+        
     # Total Current Outstanding Balance
-    total_current_os = principal_outstanding + interest_profit + others_charges + late_payment_charges
+    total_current_os = os_balance
     
     # Ageing Classification
     ageing_classification = "N/A"
